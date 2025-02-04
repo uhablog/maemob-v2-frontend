@@ -3,12 +3,10 @@
 import useFetchData from "@/hooks/useFetchData"
 import { Convention } from "@/types/convention";
 
-const API_ENDPOINT = process.env.API_ENDPOINT ? process.env.API_ENDPOINT : 'http://localhost:3000';
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : 'http://localhost:3000';
 
 export default function Page() {
 
-  console.log(`${process.env.API_ENDPOINT}`);
-  console.log(`API_ENDPOINT is ${API_ENDPOINT}`);
   const { data, loading, error } = useFetchData<Convention[]>(`${API_ENDPOINT}/api/conventions`);
 
   if (loading) return <div className="text-center p-4">Loading...</div>;

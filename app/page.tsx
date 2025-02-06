@@ -14,7 +14,12 @@ export default function Page() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">大会一覧</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-2xl font-bold">大会一覧</h1>
+        <a href="/conventions/register" className="text-blue-500 hover:underline">
+          大会登録
+        </a>
+      </div>
       {data?.map((convention) => (
         <div key={convention.id} className="border p-4 mb-4 rounded-lg shadow-sm">
           <h2 className="font-semibold text-lg">{convention.name}</h2>

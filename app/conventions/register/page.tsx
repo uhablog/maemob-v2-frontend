@@ -36,8 +36,9 @@ export default function Page() {
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-6 bg-blue-50 border rounded">
         <h1 className="text-2xl font-bold mb-4">大会登録</h1>
         <div className="mb-4">
-          <label htmlFor="text" className="block font-bold mb-1">大会名</label>
+          <label htmlFor="conventionName" className="block font-bold mb-1">大会名</label>
           <input
+            id="conventionName"
             type="text"
             {...register("name", { required: "大会名を入力してください。" })}
             className="w-full p-2 border rounded"
@@ -47,8 +48,9 @@ export default function Page() {
               {errors.name.message}
             </p>
           )}
-          <label htmlFor="text" className="block font-bold mb-1">開催日</label>
+          <label htmlFor="heldDate" className="block font-bold mb-1">開催日</label>
           <input
+            id="heldDate"
             type="date"
             {...register("held_date", { required: "開催日を入力してください。" })}
             className="w-full p-2 border rounded"

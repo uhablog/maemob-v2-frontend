@@ -11,7 +11,7 @@ export default function Page() {
   const { data, loading, error } = useFetchData<Convention[]>(`${API_ENDPOINT}/api/conventions`);
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
+  if (error) return <div className="text-red-500 text-center p-4">{error.toString()}</div>;
 
   return (
     <div className="max-w-4xl mx-auto p-6">

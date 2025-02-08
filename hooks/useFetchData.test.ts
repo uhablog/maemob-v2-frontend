@@ -1,20 +1,17 @@
-import useFetchData from '@/hooks/useFetchData';
+import useFetchData, { clearCache } from '@/hooks/useFetchData';
 import { renderHook, waitFor } from '@testing-library/react';
 
-global.fetch = jest.fn();
-
 describe('useFetchData', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
+
+  beforeEach(() => {
+    fetchMock.resetMocks();
+    clearCache();  // キャッシュをクリアしておく
   });
 
   it('fetches and returns data successfully', async () => {
     // モックデータを定義
     const mockData = [{ id: 1, title: 'Test Post', body: 'This is a test.' }];
-    (fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      json: async () => mockData,
-    });
+    fetchMock.mockResponseOnce(JSON.stringify(mockData));
 
     const { result } = renderHook(() =>
       useFetchData<typeof mockData>('https://example.com/posts')
@@ -33,6 +30,16 @@ describe('useFetchData', () => {
     expect(result.current.data).toEqual(mockData);
     expect(result.current.error).toBeNull();
     expect(fetch).toHaveBeenCalledWith('https://example.com/posts');
+
+    // キャッシュに保存されているか確認する
+    fetchMock.mockReset();
+
+    const { result: cachedResult } = renderHook(() => 
+      useFetchData<typeof mockData>('https://example.com/posts')
+    );
+
+    expect(cachedResult.current).toEqual({ data: mockData, loading: false, error: null});
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it('handles fetch errors gracefully', async () => {

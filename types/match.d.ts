@@ -4,5 +4,5 @@ export type Match = {
   awayPlayerId: string,
   homeScore: number,
   awayScore: number,
-  match_date: string;
+  matchDate: string;
 }

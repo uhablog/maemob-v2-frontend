@@ -31,6 +31,7 @@ function usePostData<T, U>(url: string) {
 
       const result: T = await response.json();
       setState({ data: result, loading: false, error: null});
+      return result;
     } catch (error) {
       setState({data: null, loading: false, error: (error as Error).message});
     }

@@ -40,7 +40,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="max-w-md mx-auto p-6 bg-blue-50 border rounded">
+      <div className="max-w-4xl mx-auto p-6 bg-blue-50 border rounded">
         <StepIndicator currentStep={1}/>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="mb-4">

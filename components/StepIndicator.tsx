@@ -18,7 +18,7 @@ export default function StepIndicator({ currentStep }: StepIndicatorProps) {
               {index + 1}
             </div>
             <span className="ml-2">{step}</span>
-            {index < steps.length - 1 && <div className="w-10 h-1 bg-gray-300 mx-2" />}
+            {/* {index < steps.length - 1 && <div className="w-10 h-1 bg-gray-300 mx-2" />} */}
           </div>
         ))}
       </div>

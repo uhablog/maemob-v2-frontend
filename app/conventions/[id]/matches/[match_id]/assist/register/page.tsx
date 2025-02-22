@@ -1,88 +1,154 @@
 'use client';
+
 import StepIndicator from "@/components/StepIndicator";
 import { useMatchContext } from "@/context/MatchContext";
-// import usePostData from "@/hooks/usePostData";
-// import { Assist } from "@/types/assist";
-// import { useParams, useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
+import usePostData from "@/hooks/usePostData";
+import { Scorer } from "@/types/scorer";
+import { useParams, useRouter } from "next/navigation";
+import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 
-// const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : 'http://localhost:3000';
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : 'http://localhost:3000';
 
 type RegisterAssist = {
-  name: string
-  player_id: string
-}
+  name: string;
+  player_id: string;
+};
 
 interface IAssistForm {
-  assist: RegisterAssist[]
+  homeAssists: RegisterAssist[];
+  awayAssists: RegisterAssist[];
 }
 
-export default function Page() {
-
+export default function AssistPage() {
   const { match } = useMatchContext();
-  // const params = useParams<{ id: string, match_id: string}>();
-  // const router = useRouter();
-  const totalScores = Number(match?.homeScore ?? 0) + Number(match?.awayScore ?? 0);
-  const { register, handleSubmit, formState: { errors } } = useForm<IAssistForm>({
+  const params = useParams<{ id: string; match_id: string }>();
+  const router = useRouter();
+
+  const { register, handleSubmit, control, formState: { errors } } = useForm<IAssistForm>({
     defaultValues: {
-      assist: Array.from({ length: totalScores }, () => ({
-        name: "",
-        player_id: ""
-      }))
-    }
+      homeAssists: [],
+      awayAssists: [],
+    },
   });
-  // const { loading, postData } = usePostData<Assist[], RegisterAssist[]>(`${API_ENDPOINT}/api/conventions/${params.id}/matches/${params.match_id}/assist`);
+
+  const { loading, postData } = usePostData<Scorer[], IAssistForm>(`${API_ENDPOINT}/api/conventions/${params.id}/matches/${params.match_id}/assists`);
+
+  const {
+    fields: homeFields,
+    append: appendHomeAssist,
+    remove: removeHomeAssist
+  } = useFieldArray({
+    control,
+    name: "homeAssists"
+  });
+
+  const {
+    fields: awayFields,
+    append: appendAwayAssist,
+    remove: removeAwayAssist
+  } = useFieldArray({
+    control,
+    name: "awayAssists"
+  });
 
   const onSubmit: SubmitHandler<IAssistForm> = async (formData) => {
-    // const result = await postData(formData.assist);
+    const result = await postData(formData);
 
-    // if (result) {
-    //   router.push(`/conventions/${params.id}/matches/${params.match_id}/mom/register`);
-    // } else {
-    //   window.alert('アシストの登録に失敗しました。');
-    // }
-
-    console.log(formData);
-  }
+    if (result) {
+      router.push(`/conventions/${params.id}/matches/${params.match_id}/complete`);
+    } else {
+      window.alert('アシストの登録に失敗しました。');
+    }
+  };
 
   return (
     <>
-      <div className="max-w-4xl mx-auto p-6 bg-blue-50 border rounded">
+      <div className="max-w-md mx-auto p-6 bg-blue-50 border rounded">
         <StepIndicator currentStep={3} />
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* ホームチームのアシスト入力欄 */}
           <div className="mb-4">
             <h3 className="text-lg font-bold">ホームチームのアシスト</h3>
-            {Array.from({ length: match?.awayScore ?? 0 }).map(( _, index) => (
-              <div key={index} className="mb-2">
-                <label className="block text-gray-700 text-sm font-bold mb-1">
-                  {`得点者 ${index + 1}`}
-                </label>
+            {homeFields.map((field, index) => (
+              <div key={field.id} className="mb-2 flex items-center">
                 <input
                   type="text"
-                  {...register(`assist.${index}.name`)}
+                  {...register(`homeAssists.${index}.name`, { required: "選手名を入力してください。" })}
                   className="w-full px-3 py-2 border rounded"
-                  // onChange={() => {
-                  //   setValue(`assist.${index}.player_id`, match?.homePlayerId ?? '')
-                  // }}
+                  placeholder={`アシスト者 ${index + 1}`}
                 />
-                <input type="hidden" {...register(`assist.${index}.player_id`)} value={match?.homePlayerId} />
-                {errors.assist?.[index]?.name && (
-                  <p>{errors.assist?.[index]?.name.message}</p>
+                <input
+                  type="hidden"
+                  {...register(`homeAssists.${index}.player_id`)}
+                  value={match?.homePlayerId}
+                />
+                <button
+                  type="button"
+                  className="ml-2 text-red-500"
+                  onClick={() => removeHomeAssist(index)}
+                >
+                  削除
+                </button>
+                {errors.homeAssists?.[index]?.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.homeAssists[index].name?.message}</p>
                 )}
               </div>
             ))}
+            <button
+              type="button"
+              className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              onClick={() => appendHomeAssist({ name: "", player_id: match?.homePlayerId ? match?.homePlayerId : '' })}
+            >
+              アシストを追加
+            </button>
           </div>
+
+          {/* アウェイチームのアシスト入力欄 */}
+          <div className="mb-4">
+            <h3 className="text-lg font-bold">アウェイチームのアシスト</h3>
+            {awayFields.map((field, index) => (
+              <div key={field.id} className="mb-2 flex items-center">
+                <input
+                  type="text"
+                  {...register(`awayAssists.${index}.name`, { required: "選手名を入力してください。" })}
+                  className="w-full px-3 py-2 border rounded"
+                  placeholder={`アシスト者 ${index + 1}`}
+                />
+                <input
+                  type="hidden"
+                  {...register(`awayAssists.${index}.player_id`)}
+                  value={match?.awayPlayerId}
+                />
+                <button
+                  type="button"
+                  className="ml-2 text-red-500"
+                  onClick={() => removeAwayAssist(index)}
+                >
+                  削除
+                </button>
+                {errors.awayAssists?.[index]?.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.awayAssists[index].name?.message}</p>
+                )}
+              </div>
+            ))}
+            <button
+              type="button"
+              className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              onClick={() => appendAwayAssist({ name: "", player_id: match?.awayPlayerId? match?.awayPlayerId: '' })}
+            >
+              アシストを追加
+            </button>
+          </div>
+
           <button
             type="submit"
-            // disabled={loading}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            disabled={loading}
           >
-            {/* {loading ? '登録中': '登録'} */}
-            登録
+            {loading ? "登録中..." : "登録"}
           </button>
         </form>
       </div>
     </>
-  )
-
-};
+  );
+}

@@ -24,7 +24,7 @@ export default function Page() {
   const params = useParams<{ id: string, match_id: string}>();
   const router = useRouter();
   const totalScores = Number(match?.homeScore ?? 0) + Number(match?.awayScore ?? 0)
-  const { register, handleSubmit, formState: { errors } } = useForm<IScorerForm>({
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<IScorerForm>({
     defaultValues: {
       scorers: Array.from({ length: totalScores}, () => ({
         name: "",
@@ -62,9 +62,9 @@ export default function Page() {
                   type="text"
                   {...register(`scorers.${index}.name`, { required: "選手名を入力してください。"})}
                   className="w-full px-3 py-2 border rounded"
-                  // onChange={(e) => {
-                  //   setValue(`scorers.${index}.player_id`, match?.homePlayerId ?? '');
-                  // }}
+                  onChange={() => {
+                    setValue(`scorers.${index}.player_id`, match?.homePlayerId ?? '');
+                  }}
                 />
                 <input type="hidden" {...register(`scorers.${index}.player_id`)} value={match?.homePlayerId} />
                 {errors.scorers?.[index]?.name && (
@@ -87,9 +87,9 @@ export default function Page() {
                     type="text"
                     {...register(`scorers.${scorerIndex}.name`, { required: "選手名を入力してください。" })}
                     className="w-full px-3 py-2 border rounded"
-                    // onChange={(e) => {
-                    //   setValue(`scorers.${scorerIndex}.player_id`, match?.awayPlayerId ?? '');
-                    // }}
+                    onChange={() => {
+                      setValue(`scorers.${scorerIndex}.player_id`, match?.awayPlayerId ?? '');
+                    }}
                   />
                   <input type="hidden" {...register(`scorers.${scorerIndex}.player_id`)} value={match?.awayPlayerId} />
                   {errors.scorers?.[scorerIndex]?.name && (

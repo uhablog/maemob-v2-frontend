@@ -6,8 +6,7 @@ import useFetchData from "@/hooks/useFetchData";
 import usePostData from "@/hooks/usePostData";
 import { Mom } from "@/types/mom";
 import { Player } from "@/types/player";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ? process.env.NEXT_PUBLIC_API_ENDPOINT : 'http://localhost:3000';
@@ -25,12 +24,10 @@ export default function Page() {
   const { register, handleSubmit, formState: { errors }} = useForm<RegisterMOM>();
   const { data: homePlayer } = useFetchData<Player>(`${API_ENDPOINT}/api/conventions/${params.id}/player/${match?.homePlayerId}`);
   const { data: awayPlayer } = useFetchData<Player>(`${API_ENDPOINT}/api/conventions/${params.id}/player/${match?.awayPlayerId}`);
-  const { loading, postData } = usePostData<Mom, RegisterMOM>(`${API_ENDPOINT}/api/conventions/{convention_id}/matches/{match_id}/mom`);
-
-  console.log(homePlayer);
-  console.log(awayPlayer);
+  const { loading, postData } = usePostData<Mom, RegisterMOM>(`${API_ENDPOINT}/api/conventions/${params.id}/matches/${match?.id}/mom`);
 
   const onSubmit: SubmitHandler<RegisterMOM> = async (formData) => {
+    console.log(formData);
     const result = await postData(formData);
 
     if (result) {

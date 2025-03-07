@@ -3,7 +3,7 @@
 import StepIndicator from "@/components/StepIndicator";
 import { useMatchContext } from "@/context/MatchContext";
 import usePostData from "@/hooks/usePostData";
-import { Scorer } from "@/types/scorer";
+import { Assist } from "@/types/assist";
 import { useParams, useRouter } from "next/navigation";
 import { SubmitHandler, useForm, useFieldArray } from "react-hook-form";
 
@@ -31,7 +31,7 @@ export default function AssistPage() {
     },
   });
 
-  const { loading, postData } = usePostData<Scorer[], IAssistForm>(`${API_ENDPOINT}/api/conventions/${params.id}/matches/${params.match_id}/assists`);
+  const { loading, postData, error } = usePostData<Assist[], RegisterAssist[]>(`${API_ENDPOINT}/api/conventions/${params.id}/matches/${params.match_id}/assists`);
 
   const {
     fields: homeFields,
@@ -52,11 +52,14 @@ export default function AssistPage() {
   });
 
   const onSubmit: SubmitHandler<IAssistForm> = async (formData) => {
-    const result = await postData(formData);
+    const assistList = formData.homeAssists.concat(formData.awayAssists);
+    console.log('assistList' ,assistList);
+    const result = await postData(assistList);
 
     if (result) {
-      router.push(`/conventions/${params.id}/matches/${params.match_id}/complete`);
+      router.push(`/conventions/${params.id}/matches/${params.match_id}/mom/register`);
     } else {
+      console.error(error);
       window.alert('アシストの登録に失敗しました。');
     }
   };
@@ -94,13 +97,16 @@ export default function AssistPage() {
                 )}
               </div>
             ))}
-            <button
-              type="button"
-              className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-              onClick={() => appendHomeAssist({ name: "", player_id: match?.homePlayerId ? match?.homePlayerId : '' })}
-            >
-              アシストを追加
-            </button>
+            {/* {
+              (typeof match?.homeScore === 'number' && homeFields.length < match?.homeScore) && */}
+              <button
+                type="button"
+                className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                onClick={() => appendHomeAssist({ name: "", player_id: match?.homePlayerId ? match?.homePlayerId : '' })}
+              >
+                アシストを追加
+              </button>
+            {/* } */}
           </div>
 
           {/* アウェイチームのアシスト入力欄 */}
@@ -131,13 +137,16 @@ export default function AssistPage() {
                 )}
               </div>
             ))}
-            <button
-              type="button"
-              className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-              onClick={() => appendAwayAssist({ name: "", player_id: match?.awayPlayerId? match?.awayPlayerId: '' })}
-            >
-              アシストを追加
-            </button>
+            {/* {
+              (typeof match?.awayScore === 'number' && awayFields.length < match?.awayScore) && */}
+              <button
+                type="button"
+                className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                onClick={() => appendAwayAssist({ name: "", player_id: match?.awayPlayerId? match?.awayPlayerId: '' })}
+              >
+                アシストを追加
+              </button>
+            {/* } */}
           </div>
 
           <button

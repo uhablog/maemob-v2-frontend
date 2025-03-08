@@ -97,8 +97,8 @@ export default function AssistPage() {
                 )}
               </div>
             ))}
-            {/* {
-              (typeof match?.homeScore === 'number' && homeFields.length < match?.homeScore) && */}
+            {
+              (typeof Number(match?.homeScore) === 'number' && homeFields.length < Number(match?.homeScore)) &&
               <button
                 type="button"
                 className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
@@ -106,7 +106,7 @@ export default function AssistPage() {
               >
                 アシストを追加
               </button>
-            {/* } */}
+            }
           </div>
 
           {/* アウェイチームのアシスト入力欄 */}
@@ -137,8 +137,8 @@ export default function AssistPage() {
                 )}
               </div>
             ))}
-            {/* {
-              (typeof match?.awayScore === 'number' && awayFields.length < match?.awayScore) && */}
+            {
+              (typeof Number(match?.awayScore) === 'number' && awayFields.length < Number(match?.awayScore)) &&
               <button
                 type="button"
                 className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
@@ -146,7 +146,7 @@ export default function AssistPage() {
               >
                 アシストを追加
               </button>
-            {/* } */}
+            }
           </div>
 
           <button

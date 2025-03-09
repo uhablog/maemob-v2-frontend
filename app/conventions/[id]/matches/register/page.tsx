@@ -25,16 +25,23 @@ export default function Page() {
   const router = useRouter();
   const { data: players } = useFetchData<Player[]>(`${API_ENDPOINT}/api/conventions/${params.id}/players`);
   const { register, handleSubmit, formState: { errors }} = useForm<IMatchForm>();
-  const { loading, postData } = usePostData<Match, IMatchForm>(`${API_ENDPOINT}/api/conventions/${params.id}/matches`);
+  const { error, loading, postData } = usePostData<Match, IMatchForm>(`${API_ENDPOINT}/api/conventions/${params.id}/matches`);
 
   const onSubmit: SubmitHandler<IMatchForm> = async (formData) => {
-    const result = await postData(formData);
+    const requestBody = {
+      ...formData,
+      homeScore: Number(formData.homeScore),
+      awayScore: Number(formData.awayScore),
+    }
+    console.log(requestBody);
+    const result = await postData(requestBody);
 
     if (result) {
       setMatch(result);
       router.push(`/conventions/${params.id}/matches/${result?.id}/scorers/register`);
     } else {
       window.alert('登録に失敗しました');
+      console.error(error);
     }
   }
 

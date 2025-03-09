@@ -1,6 +1,6 @@
 'use client';
 
-import GamesList from '@/components/conventions/gamesList';
+import GamesList from '@/components/conventions/GamesList';
 import ConventionSummary from '@/components/conventions/Summary';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';

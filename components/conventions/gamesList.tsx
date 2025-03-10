@@ -57,25 +57,27 @@ export default function GamesList({ conventionId }: GamesListProps) {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-4">
-        <Link
-          onClick={() => clearCache(`${API_ENDPOINT}/api/conventions/${conventionId}/matches`)}
-          href={`/conventions/${conventionId}/matches/register`}
-          className="text-blue-500 hover:underline"
-        >
-          試合登録
-        </Link>
-      </div>
+      <div className="border p-4 rounded-lg shadow-sm flex-grow mt-4">
+        <div className="flex items-center justify-between mb-4">
+          <Link
+            onClick={() => clearCache(`${API_ENDPOINT}/api/conventions/${conventionId}/matches`)}
+            href={`/conventions/${conventionId}/matches/register`}
+            className="text-blue-500 hover:underline"
+          >
+            試合登録
+          </Link>
+        </div>
 
-      {matchesWithPlayers.map((match) => (
-        <Link key={match.id} href={`/conventions/${conventionId}/matches/${match.id}`}>
-          <div className="border p-4 mb-4 rounded-lg shadow-sm">
-            <h2 className="font-semibold text-lg">
-              {match.homePlayerName ?? 'Unknown'} {match.homeScore} - {match.awayScore} {match.awayPlayerName ?? 'Unknown'}
-            </h2>
-          </div>
-        </Link>
-      ))}
+        {matchesWithPlayers.map((match) => (
+          <Link key={match.id} href={`/conventions/${conventionId}/matches/${match.id}`}>
+            <div className="border p-4 mb-4 rounded-lg shadow-sm">
+              <h2 className="font-semibold text-lg">
+                {match.homePlayerName ?? 'Unknown'} {match.homeScore} - {match.awayScore} {match.awayPlayerName ?? 'Unknown'}
+              </h2>
+            </div>
+          </Link>
+        ))}
+      </div>
     </>
   )
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import GamesList from '@/components/conventions/gamesList';
+import GamesList from '@/components/conventions/GamesList';
 import ConventionSummary from '@/components/conventions/Summary';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -27,10 +27,8 @@ export default function Page() {
           ))}
         </div>
       </div>
-      <div className="border p-4 rounded-lg shadow-sm flex-grow mt-4">
         {activeTab === "概要" && <ConventionSummary conventionId={params.id} />}
         {activeTab === "試合" && <GamesList conventionId={params.id}/>}
-      </div>
     </div>
   );
 }

@@ -1,25 +1,25 @@
 import useFetchData from "@/hooks/useFetchData";
-import { Scorer } from "@/types/scorer";
+import { Assist } from "@/types/assist";
 
-interface TopScorerProps {
+interface TopAssistProps {
   conventionId: string;
 }
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:3000';
 
-export default function TopScorer({conventionId}: TopScorerProps) {
+export default function TopAssist({conventionId}: TopAssistProps) {
 
-  const { data: scorers, loading, error } = useFetchData<Scorer[]>(`${API_ENDPOINT}/api/scorers?convention_id=${conventionId}`);
+  const { data: assists, loading, error } = useFetchData<Assist[]>(`${API_ENDPOINT}/api/assists?convention_id=${conventionId}`);
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>
 
-  console.log('scorer', scorers);
+  console.log('assists', assists);
 
   return (
     <>
       <div className="border p-4 rounded-lg shadow-sm flex-grow mt-4">
-        <h2>Top scorer</h2>
+        <h2>Top assist</h2>
         <div className="overflow-x-auto">
           <table className="bg-gray-100 min-w-full bg-white shadow-md rounded-lg">
             <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
@@ -29,13 +29,13 @@ export default function TopScorer({conventionId}: TopScorerProps) {
               </tr>
             </thead>
             <tbody className="bg-gray-100 text-gray-600 text-sm">
-              {scorers?.map((scorer) => (
+              {assists?.map((assist) => (
                 <tr
-                  key={`${scorer.player_id}-${scorer.name}`}
+                  key={`${assist.player_id}-${assist.name}`}
                   className="hover:bg-gray-200 transition"
                 >
-                  <td className="py-3 px-6 text-left">{scorer.name}<br/>{scorer.player_name}</td>
-                  <td className="py-3 px-6 text-center">{scorer.score_count}</td>
+                  <td className="py-3 px-6 text-left">{assist.name}<br/>{assist.player_name}</td>
+                  <td className="py-3 px-6 text-center">{assist.assist_count}</td>
                 </tr>
               ))}
             </tbody>

@@ -1,3 +1,4 @@
+import TopAssist from "./AssistRanking";
 import TopScorer from "./ScorerRanking";
 import Table from "./Table";
 
@@ -11,6 +12,7 @@ export default function ConventionSummary({conventionId}: ConventionSummaryProps
     <>
       <Table conventionId={conventionId} />
       <TopScorer conventionId={conventionId} />
+      <TopAssist conventionId={conventionId} />
     </>
   )
 }

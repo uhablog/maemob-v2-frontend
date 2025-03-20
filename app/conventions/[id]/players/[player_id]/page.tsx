@@ -1,5 +1,8 @@
 'use client';
 
+import TopAssist from "@/components/conventions/AssistRanking";
+import TopMom from "@/components/conventions/MomRanking";
+import TopScorer from "@/components/conventions/ScorerRanking";
 import useFetchData from "@/hooks/useFetchData";
 import { Player } from "@/types/player";
 import { useParams } from "next/navigation";
@@ -26,6 +29,9 @@ export default function Page() {
       <div className="border p-4 rounded-lg shadow-sm flex-grow flex flex-col">
         {player?.name}
       </div>
+      <TopScorer playerId={playerId} />
+      <TopAssist playerId={playerId} />
+      <TopMom playerId={playerId} />
     </>
   )
 };

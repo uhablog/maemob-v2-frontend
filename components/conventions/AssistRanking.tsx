@@ -2,19 +2,19 @@ import useFetchData from "@/hooks/useFetchData";
 import { Assist } from "@/types/assist";
 
 interface TopAssistProps {
-  conventionId: string;
+  conventionId?: string;
+  playerId?: string;
 }
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:3000';
 
-export default function TopAssist({conventionId}: TopAssistProps) {
+export default function TopAssist({conventionId, playerId}: TopAssistProps) {
 
-  const { data: assists, loading, error } = useFetchData<Assist[]>(`${API_ENDPOINT}/api/assists?convention_id=${conventionId}`);
+  const endpoint = conventionId ? `${API_ENDPOINT}/api/assists?convention_id=${conventionId}`: `${API_ENDPOINT}/api/assists?player_id=${playerId}`;
+  const { data: assists, loading, error } = useFetchData<Assist[]>(endpoint);
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>
-
-  console.log('assists', assists);
 
   return (
     <>

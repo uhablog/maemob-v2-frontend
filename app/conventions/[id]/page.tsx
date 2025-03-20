@@ -1,6 +1,7 @@
 'use client';
 
 import GamesList from '@/components/conventions/GamesList';
+import Players from '@/components/conventions/Players';
 import ConventionSummary from '@/components/conventions/Summary';
 import useFetchData from '@/hooks/useFetchData';
 import { Convention } from '@/types/convention';
@@ -23,7 +24,7 @@ export default function Page() {
       <div className="border p-4 rounded-lg shadow-sm flex-grow">
         <h2 className="font-semibold text-lg">{convention?.name}</h2>
         <div className='flex space-x-4 mt-2 border-b'>
-          {["概要", "試合"].map((tab) => (
+          {["概要", "試合", "プレイヤー"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -38,6 +39,7 @@ export default function Page() {
       </div>
         {activeTab === "概要" && <ConventionSummary conventionId={params.id} />}
         {activeTab === "試合" && <GamesList conventionId={params.id}/>}
+        {activeTab === "プレイヤー" && <Players conventionId={params.id}/>}
     </div>
   );
 }

@@ -1,8 +1,7 @@
 'use client';
 
 import Footer from "@/components/footer";
-import Header from "@/components/header";
-import './globals.css'; // Tailwind CSSのグローバル設定を反映
+import './globals.css';
 import Nav from "@/components/nav";
 import { MatchProvider } from "@/context/MatchContext";
 
@@ -17,7 +16,6 @@ export default function RootLayout({
         <MatchProvider>
           <div className="min-h-screen">
             <Nav/>
-            <Header/>
             <main className="min-h-screen">
               <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 {children}

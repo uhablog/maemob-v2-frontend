@@ -15,8 +15,9 @@ export default function Nav() {
   const menuItems = isConventionPage
   ? [
     { name: "大会", href: '/'},
-    { name: "チーム", href: `${pathname}`},
-    { name: "プレイヤー", href: `${pathname}`}
+    { name: "概要", href: `${pathname}?tab=${encodeURIComponent("概要")}`},
+    { name: "試合", href: `${pathname}?tab=${encodeURIComponent("試合")}`},
+    { name: "プレイヤー", href: `${pathname}?tab=${encodeURIComponent("プレイヤー")}`}
   ]: [
     { name: "大会", href: '/'}
   ];

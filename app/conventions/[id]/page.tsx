@@ -4,14 +4,24 @@ import GamesList from '@/components/conventions/GamesList';
 import ConventionSummary from '@/components/conventions/Summary';
 import useFetchData from '@/hooks/useFetchData';
 import { Convention } from '@/types/convention';
-import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:3000';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+
+  const initialTab = searchParams.get('tab');
+  const validTabs = useMemo(() => ["概要", "試合"], []);
   const [activeTab, setActiveTab] = useState("概要");
+
+  useEffect(() => {
+    if (initialTab && validTabs.includes(initialTab)) {
+      setActiveTab(initialTab);
+    };
+  }, [initialTab, validTabs]);
 
   const { data: convention, loading, error } = useFetchData<Convention>(`${API_ENDPOINT}/api/convention/${params.id}`);
 
@@ -23,7 +33,7 @@ export default function Page() {
       <div className="border p-4 rounded-lg shadow-sm flex-grow">
         <h2 className="font-semibold text-lg">{convention?.name}</h2>
         <div className='flex space-x-4 mt-2 border-b'>
-          {["概要", "試合"].map((tab) => (
+          {validTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

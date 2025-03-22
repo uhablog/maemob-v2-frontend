@@ -1,6 +1,7 @@
 'use client';
 
 import GamesList from '@/components/conventions/GamesList';
+import Players from '@/components/conventions/Players';
 import ConventionSummary from '@/components/conventions/Summary';
 import useFetchData from '@/hooks/useFetchData';
 import { Convention } from '@/types/convention';
@@ -14,7 +15,7 @@ export default function Page() {
   const searchParams = useSearchParams();
 
   const initialTab = searchParams.get('tab');
-  const validTabs = useMemo(() => ["概要", "試合"], []);
+  const validTabs = useMemo(() => ["概要", "試合", "プレイヤー"], []);
   const [activeTab, setActiveTab] = useState("概要");
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function Page() {
       </div>
         {activeTab === "概要" && <ConventionSummary conventionId={params.id} />}
         {activeTab === "試合" && <GamesList conventionId={params.id}/>}
+        {activeTab === "プレイヤー" && <Players conventionId={params.id}/>}
     </div>
   );
 }

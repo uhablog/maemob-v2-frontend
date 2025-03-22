@@ -2,14 +2,16 @@ import useFetchData from "@/hooks/useFetchData";
 import { Scorer } from "@/types/scorer";
 
 interface TopScorerProps {
-  conventionId: string;
+  conventionId?: string;
+  playerId?: string;
 }
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:3000';
 
-export default function TopScorer({conventionId}: TopScorerProps) {
+export default function TopScorer({conventionId, playerId}: TopScorerProps) {
 
-  const { data: scorers, loading, error } = useFetchData<Scorer[]>(`${API_ENDPOINT}/api/scorers?convention_id=${conventionId}`);
+  const endpoint = conventionId ? `${API_ENDPOINT}/api/scorers?convention_id=${conventionId}`: `${API_ENDPOINT}/api/scorers?player_id=${playerId}`;
+  const { data: scorers, loading, error } = useFetchData<Scorer[]>(endpoint);
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>

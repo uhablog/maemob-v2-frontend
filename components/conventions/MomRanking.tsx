@@ -2,19 +2,19 @@ import useFetchData from "@/hooks/useFetchData";
 import { Mom } from "@/types/mom";
 
 interface TopMomProps {
-  conventionId: string;
+  conventionId?: string;
+  playerId?: string;
 }
 
 const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT ?? 'http://localhost:3000';
 
-export default function TopMom({conventionId}: TopMomProps) {
+export default function TopMom({conventionId, playerId}: TopMomProps) {
 
-  const { data: moms, loading, error } = useFetchData<Mom[]>(`${API_ENDPOINT}/api/mom?convention_id=${conventionId}`);
+  const endpoint = conventionId ? `${API_ENDPOINT}/api/mom?convention_id=${conventionId}`: `${API_ENDPOINT}/api/mom?player_id=${playerId}`;
+  const { data: moms, loading, error } = useFetchData<Mom[]>(endpoint);
 
   if (loading) return <div className="text-center p-4">Loading...</div>
   if (error) return <div className="text-red-500 text-center p-4">{error}</div>
-
-  console.log('moms', moms);
 
   return (
     <>

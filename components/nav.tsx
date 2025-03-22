@@ -1,5 +1,7 @@
 'use client';
 
+import { useUser } from "@auth0/nextjs-auth0";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -8,8 +10,13 @@ export default function Nav() {
 
   const pathname = usePathname();
   const [ isMenuOpen, setIsMenuOpen ] = useState(false);
+  const [ isUserMenuOpen, setIsUserMenuOpen ] = useState(false);
+  const { user, isLoading, error } = useUser();
 
-  console.log(`pathname is ${pathname}`);
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>error: {error.name}| error message is {error.message}</div>
+  if (!user) return <div>Not Authenticated!</div>
+
   const isConventionPage = pathname.startsWith('/conventions/');
 
   const menuItems = isConventionPage
@@ -47,6 +54,43 @@ export default function Nav() {
                     {item.name}
                   </Link>
                 ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden md:block">
+            <div className="ml-4 flex items-center md:ml-6">
+              <div className="relative ml-3">
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                    className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
+                    id="user-menu-button"
+                    aria-expanded="false"
+                    aria-haspopup="true">
+                    <span className="absolute -inset-1.5"></span>
+                    <span className="sr-only">Open user menu</span>
+                    <Image className="size-8 rounded-full" src={`${user.picture}`} alt="" width={100} height={50}/>
+                  </button>
+                </div>
+                {isUserMenuOpen && (
+                  <div
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 focus:outline-hidden"
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="user-menu-button"
+                    tabIndex={-1}
+                  >
+                    <a
+                      href="/auth/logout"
+                      className="block px-4 py-2 text-sm text-gray-700"
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="user-menu-item-2"
+                    >Sign out</a>
+                  </div>
+                )}
               </div>
             </div>
           </div>

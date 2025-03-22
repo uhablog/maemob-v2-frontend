@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^4.1.0",
     "jest-fetch-mock": "^3.0.3",
     "next": "15.1.6",
     "react": "^19.0.0",

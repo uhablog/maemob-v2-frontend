@@ -2,6 +2,7 @@
 
 import useFetchData, { clearCache } from "@/hooks/useFetchData";
 import { Match } from "@/types/match";
+import { getAccessToken } from "@auth0/nextjs-auth0";
 import Link from "next/link"
 import { useEffect, useState } from "react";
 
@@ -26,10 +27,19 @@ export default function GamesList({ conventionId }: GamesListProps) {
 
     const fetchPlayerNames = async () => {
       try {
+        const accessToken = await getAccessToken();
         // 各試合の homePlayerId と awayPlayerId を使ってプレイヤー名を取得
         const playerFetchPromises = matches.map(async (match) => {
-          const homePlayerResponse = await fetch(`${API_ENDPOINT}/api/conventions/${conventionId}/player/${match.homePlayerId}`);
-          const awayPlayerResponse = await fetch(`${API_ENDPOINT}/api/conventions/${conventionId}/player/${match.awayPlayerId}`);
+          const homePlayerResponse = await fetch(`${API_ENDPOINT}/api/conventions/${conventionId}/player/${match.homePlayerId}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          });
+          const awayPlayerResponse = await fetch(`${API_ENDPOINT}/api/conventions/${conventionId}/player/${match.awayPlayerId}`, {
+            headers: {
+              'Authorization': `Bearer ${accessToken}`
+            }
+          });
 
           const homePlayer = await homePlayerResponse.json();
           const awayPlayer = await awayPlayerResponse.json();

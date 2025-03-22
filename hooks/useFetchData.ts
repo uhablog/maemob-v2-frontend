@@ -1,3 +1,4 @@
+import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useEffect, useState } from 'react';
 
 type FetchState<T> = {
@@ -88,7 +89,12 @@ function useFetchData<T>(
        */
       try {
         setState({ data: null, loading: true, error: null});
-        const response = await fetch(`${url}${queryString}`);
+        const accessToken = await getAccessToken();
+        const response = await fetch(`${url}${queryString}`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.statusText}`);
         }

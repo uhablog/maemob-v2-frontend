@@ -1,3 +1,4 @@
+import { getAccessToken } from "@auth0/nextjs-auth0";
 import { useState } from "react";
 
 type PostState<T> = {
@@ -17,10 +18,12 @@ function usePostData<T, U>(url: string) {
     setState({data: null, loading: true, error: null});
 
     try {
+      const accessToken = await getAccessToken();
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(payload)
       });
@@ -31,6 +34,7 @@ function usePostData<T, U>(url: string) {
 
       const result: T = await response.json();
       setState({ data: result, loading: false, error: null});
+      return result;
     } catch (error) {
       setState({data: null, loading: false, error: (error as Error).message});
     }

@@ -1,13 +1,9 @@
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import type { Metadata } from "next";
-import './globals.css'; // Tailwind CSSのグローバル設定を反映
-import Nav from "@/components/nav";
+'use client';
 
-export const metadata: Metadata = {
-  title: "MaeMob",
-  description: "FC25の結果を管理するアプリ",
-};
+import Footer from "@/components/footer";
+import './globals.css';
+import Nav from "@/components/nav";
+import { MatchProvider } from "@/context/MatchContext";
 
 export default function RootLayout({
   children,
@@ -16,18 +12,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full bg-gray-100">
-      <body className="h-full">
-        <div className="min-h-screen">
-          <Nav/>
-          <Header/>
-          <main className="min-h-screen">
-            <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-              {children}
+        <body className="h-full">
+          <MatchProvider>
+            <div className="min-h-screen">
+              <Nav/>
+              <main className="min-h-screen">
+                <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                  {children}
+                </div>
+              </main>
+              <Footer/>
             </div>
-          </main>
-          <Footer/>
-        </div>
-      </body>
+          </MatchProvider>
+        </body>
     </html>
   );
 }
